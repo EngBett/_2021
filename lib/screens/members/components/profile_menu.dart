@@ -9,12 +9,10 @@ class ProfileMenu extends StatelessWidget {
     @required this.text,
     @required this.icon,
     this.press,
-    this.alt,
   }) : super(key: key);
 
   final String text, icon;
   final VoidCallback press;
-  final Icon alt;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +25,11 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            alt == null
-                ? SvgPicture.asset(
+            SvgPicture.asset(
               icon,
               color: kPrimaryColor,
               width: 22,
-            )
-                : alt,
+            ),
             SizedBox(width: 20),
             Expanded(child: Text(text)),
             Icon(Icons.arrow_forward_ios),
