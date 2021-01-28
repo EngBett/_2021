@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfilePic extends StatelessWidget {
+  final Map user;
   const ProfilePic({
-    Key key,
+    Key key, this.user,
   }) : super(key: key);
 
   @override
@@ -16,7 +17,7 @@ class ProfilePic extends StatelessWidget {
         overflow: Overflow.visible,
         children: [
           CircleAvatar(
-            backgroundImage: AssetImage("assets/images/userImage.jpg"),
+            backgroundImage: NetworkImage("https://ui-avatars.com/api/?size=512&name=${user["data"]['firstname']}+${user["data"]['lastname']}"),
           ),
           Positioned(
             right: -16,

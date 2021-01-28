@@ -32,46 +32,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
 
   Map _user;
-  String _country;
-
-  bool _loading = false;
 
   @override
   void initState() {
-    _getLocalStorage();
-
-    setdDrawerListArray();
+    _fetchUser();
+    setDrawerListArray();
     super.initState();
   }
 
-
-  Future<SharedPreferences> _getLocalStorage() async {
-
+  void _fetchUser() async {
     var storage = await SharedPreferences.getInstance();
 
-    var user_id = storage.getString('user_id');
+    var userId = storage.getInt('user_id');
     var token = storage.getString('token');
+    var res = await CallApi().getDataWToken("/api-user/$userId", token);
 
     setState(() {
-      _country = storage.getString('country');
-    });
-
-
-    _fetchUser(user_id, token);
-
-  }
-
-  void _fetchUser(id, token) async {
-    var res = await CallApi().getDataWToken("/api-user/$id", token);
-
-    setState((){
       _user = json.decode(res.body);
     });
-
   }
 
-
-  void setdDrawerListArray() {
+  void setDrawerListArray() {
     drawerList = <DrawerList>[
       DrawerList(
         index: DrawerIndex.HOME,
@@ -135,7 +116,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     height: 100.0,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: ExactAssetImage("assets/images/aylf_upscaled.png"),
+                        image:
+                            ExactAssetImage("assets/images/aylf_upscaled.png"),
                         fit: BoxFit.contain,
                       ),
                     ), //BoxDecoration
@@ -170,10 +152,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(40.0)),
-                                child: _user==null ? Image.asset('assets/images/default-user-image.png') : Image.network("https://ui-avatars.com/api/?size=512&name=${_user["data"]['firstname']}+${_user["data"]['lastname']}"),
+                                child: _user == null
+                                    ? Image.asset(
+                                        'assets/images/default-user-image.png')
+                                    : Image.network(
+                                        "https://ui-avatars.com/api/?size=512&name=${_user["data"]['firstname']}+${_user["data"]['lastname']}"),
                               ),
-                              onTap: () async{
-                                Navigator.pushNamed(context, ProfileScreen.routeName);
+                              onTap: () async {
+                                if (_user != null) {
+                                  Navigator.pushNamed(
+                                      context, ProfileScreen.routeName,
+                                      arguments: _user);
+                                }
                               },
                             ),
                           ),
@@ -237,11 +227,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   color: Colors.red,
                 ),
                 onTap: () async {
-
-                  SharedPreferences localStorage =
-                      await SharedPreferences.getInstance();
-                  localStorage.clear();
-
+                  var storage = await SharedPreferences.getInstance();
+                  storage.clear();
                   Navigator.popUntil(
                       context, ModalRoute.withName(SplashScreen.routeName));
                 },
@@ -371,26 +358,19 @@ class _HomeDrawerState extends State<HomeDrawer> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
           SizedBox(
             height: 50,
             child: Image.asset('assets/images/pacman-loader.gif'),
           ),
-
           SizedBox(width: 20),
-
           Text(
             'Redirecting ...',
             style: TextStyle(
                 fontFamily: AppTheme.fontName,
                 fontSize: 14,
                 color: Colors.grey,
-                fontWeight: FontWeight.bold
-            ),
+                fontWeight: FontWeight.bold),
           ),
-
-
-
         ],
       ),
     );
@@ -398,71 +378,31 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Widget _pageLoadingSnackBar() {
     return SnackBar(
-      backgroundColor: HexColor("CFE7F1"),
-      duration: Duration(milliseconds: 4000),
-      content: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-
-            SizedBox(
-              height: 50,
-              child: Image.asset('assets/images/pacman-loader.gif'),
-            ),
-
-            SizedBox(width: 20),
-
-            Text(
-              'Another process is ongoing ...',
-              style: TextStyle(
-                  fontFamily: AppTheme.fontName,
-                  fontSize: 14,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold
+        backgroundColor: HexColor("CFE7F1"),
+        duration: Duration(milliseconds: 4000),
+        content: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 50,
+                child: Image.asset('assets/images/pacman-loader.gif'),
               ),
-            ),
-
-
-
-          ],
-        ),
-      )
-    );
-  }
-
-  Widget _noInternetSnackBar() {
-    return SnackBar(
-      backgroundColor: HexColor("CFE7F1"),
-      duration: Duration(milliseconds: 4000),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-
-          SizedBox(
-            height: 50,
-            child: Image.asset('assets/images/no_internet.gif'),
+              SizedBox(width: 20),
+              Text(
+                'Another process is ongoing ...',
+                style: TextStyle(
+                    fontFamily: AppTheme.fontName,
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-
-          SizedBox(width: 20),
-
-          Text(
-            'No internet connection',
-            style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-
-        ],
-      ),
-    );
+        ));
   }
-
 }
 
 enum DrawerIndex {

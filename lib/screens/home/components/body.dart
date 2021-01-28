@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_aylf_mobile/helpers/general_controller.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
 import 'package:new_aylf_mobile/screens/activities/activity_screen.dart';
 import 'package:new_aylf_mobile/screens/events/events_screen.dart';
 import 'package:new_aylf_mobile/screens/group/group_screen.dart';
@@ -19,8 +16,8 @@ import 'title_view.dart';
 import 'volunteer_view.dart';
 
 class Body extends StatefulWidget {
-  Body({Key key, this.scaffoldKey}) : super(key: key);
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  Body({Key key}) : super(key: key);
+
 
   @override
   _BodyState createState() => _BodyState();
@@ -29,29 +26,21 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> with TickerProviderStateMixin {
   double topBarOpacity = 0.0;
 
+  int _groupId;
   String _groupName;
-  String _groupId;
-  String _country;
-
-
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _regionName;
 
   @override
   void initState() {
-    _getUserDetails();
-
+    _getGroup();
     super.initState();
   }
 
-  void _getUserDetails() async {
+  void _getGroup() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
-
-    setState(() {
-      _country = storage.get('country');
-      _groupName = storage.get('group_name');
-      _groupId = storage.get('group_id');
-    });
-
+    _groupId = storage.getInt('group_id');
+    _groupName = storage.getString('group_name');
+    _regionName = storage.getString('region_name');
   }
 
   @override
@@ -62,7 +51,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
         backgroundColor: AppTheme.white,
         body: Padding(
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -79,7 +67,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                   children: [
                     CarouselUi(),
                     ResourcesListView(
-                      scaffoldKey: _scaffoldKey,
                       callBacks: [
                         () {
                           openEvents();
@@ -109,7 +96,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
                     GroupView(
                       groupName: _groupName != null ? _groupName : 'waiting...',
-                      regionName: _country != null ? _country : 'waiting...',
+                      regionName: _regionName != null ? _regionName : 'waiting...',
                     )
 
                   ],

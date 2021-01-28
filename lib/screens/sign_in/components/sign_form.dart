@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
 import 'package:new_aylf_mobile/components/form_error.dart';
+import 'package:new_aylf_mobile/helpers/general_controller.dart';
 import 'package:new_aylf_mobile/screens/forgot_password/forgot_password_screen.dart';
 import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
@@ -74,8 +79,9 @@ class _SignFormState extends State<SignForm> {
             press: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                // if all are valid then go to success screen
-                Navigator.pushNamed(context, NavigationScreen.routeName);
+
+                //Sign In
+                _signIn();
               }
             },
           ),
@@ -149,4 +155,75 @@ class _SignFormState extends State<SignForm> {
       ),
     );
   }
+
+  _signIn() async {
+
+    if(!await getConnection()){
+      _showNoInternetModal();
+      return;
+    }
+
+    var loginData = await Controller.signIn(email, password);
+
+    if(loginData.containsKey("access_token")){
+
+      SharedPreferences storage = await SharedPreferences.getInstance();
+
+      var group =  await Controller.getGroup(loginData['user']['group_id']);
+      await storage.setString('token', loginData['access_token']);
+      await storage.setInt('user_id', loginData['user']['id']);
+      await storage.setInt('group_id', loginData['user']['group_id']);
+      await storage.setString('group_name', group['name']);
+      var res = await storage.setString('region_name', group['region']['name']);
+
+
+      //Sign In
+      Navigator.pushNamed(context, NavigationScreen.routeName, arguments: res);
+
+    }else{
+
+      if (!errors.contains(loginData["message"]))
+        setState(() {
+          errors.add(loginData["message"]);
+        });
+
+    }
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<bool> getConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
+  _showNoInternetModal(){
+    showModalBottomSheet(context: context, builder: (BuildContext context) => Container(
+      height: getProportionateScreenHeight(50),
+      color: Colors.white,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('Check your internet connection...'),
+          ],
+        ),
+      ),
+    ));
+  }
+
 }

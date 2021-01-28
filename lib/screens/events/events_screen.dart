@@ -7,6 +7,7 @@ class EventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Map> events = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
           title: Text("Events"),
@@ -19,6 +20,6 @@ class EventScreen extends StatelessWidget {
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: Body()));
+            child: Body(groupEvents: events,)));
   }
 }

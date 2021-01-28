@@ -8,6 +8,9 @@ import '../../../size_config.dart';
 import 'event_view.dart';
 
 class Body extends StatefulWidget {
+  final List<Map> groupEvents;
+
+  const Body({Key key, this.groupEvents}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -37,7 +40,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   Future<void> getEvents() async{
-    var e = await Controller.getEvents();
+    List<Map> e;
+    if(widget.groupEvents == null){
+      e = await Controller.getEvents();
+    }else{
+      e = widget.groupEvents;
+    }
+
     setState(() {
       events = e;
       print(e);

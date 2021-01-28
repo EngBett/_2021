@@ -6,11 +6,12 @@ class ResourcesScreen extends StatelessWidget {
   static String routeName = "/resources";
   @override
   Widget build(BuildContext context) {
+    final List<Map> args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
           title: Text("Resources"),
         ),
-        body: Body()
+        body: Body(groupResources: args,)
     );
   }
 }

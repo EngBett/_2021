@@ -6,11 +6,12 @@ class GroupScreen extends StatelessWidget {
   static String routeName = "/group";
   @override
   Widget build(BuildContext context) {
+    final int groupId = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
           title: Text("Group"),
         ),
-        body: Body()
+        body: Body(groupId: groupId,)
     );
   }
 }

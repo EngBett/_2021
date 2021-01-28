@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import '../../../app_theme.dart';
 import 'resource_list_data.dart';
 
-
 class ResourcesListView extends StatefulWidget {
   const ResourcesListView(
-      {Key key, this.scaffoldKey,this.callBacks})
+      {Key key,this.callBacks})
       : super(key: key);
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
   final List<Function> callBacks;
 
   @override
@@ -52,7 +50,6 @@ class _ResourceListViewState extends State<ResourcesListView>
           final int count =
           resourceListData.length > 10 ? 10 : resourceListData.length;
           return ResourceView(
-            scaffoldKey : widget.scaffoldKey,
             callback: widget.callBacks[index],
             resourceListData: resourceListData[index],
           );
@@ -64,11 +61,10 @@ class _ResourceListViewState extends State<ResourcesListView>
 
 class ResourceView extends StatelessWidget {
   const ResourceView(
-      {Key key, this.resourceListData, this.scaffoldKey, this.callback}) : super(key: key);
+      {Key key, this.resourceListData, this.callback}) : super(key: key);
 
   final Function callback;
   final ResourceListData resourceListData;
-  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {

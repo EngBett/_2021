@@ -8,6 +8,9 @@ import '../../../size_config.dart';
 import 'activity_view.dart';
 
 class Body extends StatefulWidget {
+  final int groupId;
+
+  const Body({Key key, this.groupId}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -27,7 +30,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    getEvents();
+    getActivities();
     super.initState();
   }
 
@@ -36,8 +39,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     return true;
   }
 
-  Future<void> getEvents() async{
-    var e = await Controller.getActivities();
+  Future<void> getActivities() async{
+    List<Map> e;
+    if(widget.groupId == null){
+      e = await Controller.getActivities();
+    }else{
+      e = await Controller.getGroupActivities(widget.groupId);
+    }
+
     setState(() {
       activities = e;
       print(e);

@@ -1,9 +1,23 @@
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:new_aylf_mobile/screens/group/group_screen.dart';
+import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../app_theme.dart';
+import '../../../size_config.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
+  final Map user;
+
+  const Body({Key key, this.user}) : super(key: key);
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -11,32 +25,48 @@ class Body extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
-          ProfilePic(),
+          ProfilePic(user: widget.user,),
+          SizedBox(height: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "${widget.user["data"]['firstname']} ${widget.user["data"]['lastname']}",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+            ],
+          ),
           SizedBox(height: 20),
           ProfileMenu(
-            text: "My Account",
-            icon: "assets/icons/User Icon.svg",
+            text: "Activities",
+            icon: "",
+            alt: Icon(FeatherIcons.activity,color: AppTheme.aylfMain,size: getProportionateScreenWidth(20),),
             press: () => {},
           ),
           ProfileMenu(
-            text: "Notifications",
-            icon: "assets/icons/Bell.svg",
-            press: () {},
+            text: "My group",
+            icon: "",
+            alt: Icon(FeatherIcons.users,color: AppTheme.aylfMain,size: getProportionateScreenWidth(20),),
+            press: () async {
+              var storage = await SharedPreferences.getInstance();
+              Navigator.pushNamed(context, GroupScreen.routeName,arguments: storage.getInt('group_id'));
+            },
           ),
           ProfileMenu(
             text: "Settings",
             icon: "assets/icons/Settings.svg",
             press: () {},
           ),
-          ProfileMenu(
-            text: "Help Center",
-            icon: "assets/icons/Question mark.svg",
-            press: () {},
-          ),
+
           ProfileMenu(
             text: "Log Out",
             icon: "assets/icons/Log out.svg",
-            press: () {},
+            press: () async {
+              var storage = await SharedPreferences.getInstance();
+              storage.clear();
+              Navigator.popUntil(context, ModalRoute.withName(SplashScreen.routeName));
+            },
           ),
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:new_aylf_mobile/screens/event_view/event_view_screen.dart';
 import 'package:new_aylf_mobile/screens/events/events_screen.dart';
 import 'package:new_aylf_mobile/screens/forgot_password/forgot_password_screen.dart';
 import 'package:new_aylf_mobile/screens/group/group_screen.dart';
+import 'package:new_aylf_mobile/screens/members/members_screen.dart';
 import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
 import 'package:new_aylf_mobile/screens/notifications/notifications_screen.dart';
 import 'package:new_aylf_mobile/screens/profile/profile_screen.dart';
@@ -31,5 +32,6 @@ final Map<String, WidgetBuilder> routes = {
   GroupScreen.routeName: (context) => GroupScreen(),
   NotificationsScreen.routeName: (context) => NotificationsScreen(),
   EventViewScreen.routeName: (context) => EventViewScreen(),
-  ActivityViewScreen.routeName: (context) => ActivityViewScreen()
+  ActivityViewScreen.routeName: (context) => ActivityViewScreen(),
+  MembersScreen.routeName: (context) => MembersScreen()
 };

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:new_aylf_mobile/helpers/hex_color.dart';
+import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
 import 'package:new_aylf_mobile/screens/sign_in/sign_in_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // This is the best practice
 import '../../../constants.dart';
@@ -74,8 +76,14 @@ class _BodyState extends State<Body> {
                           Icons.arrow_forward_ios,
                         color: Colors.white,
                       ),
-                      press: () {
-                        Navigator.pushNamed(context, SignInScreen.routeName);
+                      press: () async {
+                        SharedPreferences storage = await SharedPreferences.getInstance();
+                        if(storage.getString("token") == null){
+                          Navigator.pushNamed(context, SignInScreen.routeName);
+                        }else{
+                          Navigator.pushNamed(context, NavigationScreen.routeName);
+                        }
+
                       },
                     ),
                     Spacer(),

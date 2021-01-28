@@ -8,6 +8,9 @@ import '../../../size_config.dart';
 import 'resource_view.dart';
 
 class Body extends StatefulWidget {
+  final List<Map> groupResources;
+
+  const Body({Key key, this.groupResources}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -24,10 +27,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   @override
   void initState() {
-
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
-    getEvents();
+    getGroups();
     super.initState();
   }
 
@@ -36,8 +38,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     return true;
   }
 
-  Future<void> getEvents() async{
-    var e = await Controller.getResources();
+  Future<void> getGroups() async{
+    List<Map> e;
+    if(widget.groupResources == null){
+      e = await Controller.getResources();
+    }else{
+      e = widget.groupResources;
+    }
+
     setState(() {
       resources = e;
       print(e);

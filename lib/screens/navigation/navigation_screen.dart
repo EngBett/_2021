@@ -26,15 +26,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
   DrawerIndex drawerIndex;
   AnimationController sliderAnimationController;
 
+
   @override
   void initState() {
-
     drawerIndex = DrawerIndex.HOME;
     screenView = const MyHomePage();
-    /*drawerIndex = DrawerIndex.About;
-    screenView = AboutAYLF();*/
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
