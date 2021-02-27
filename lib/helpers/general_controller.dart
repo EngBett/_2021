@@ -8,15 +8,6 @@ class Controller {
   static String token =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjkyZjZkNTczMmRkNDQ0Y2NhYzFjNjc4N2IzM2QyZjA4NWE2MmVmYjM3M2VlYzM0YjBjMWY5ZmExZTkyZGZhZThiN2Q4ZGQyZThhMTViYTdlIn0.eyJhdWQiOiIxIiwianRpIjoiOTJmNmQ1NzMyZGQ0NDRjY2FjMWM2Nzg3YjMzZDJmMDg1YTYyZWZiMzczZWVjMzRiMGMxZjlmYTFlOTJkZmFlOGI3ZDhkZDJlOGExNWJhN2UiLCJpYXQiOjE2MTEyOTg4NDcsIm5iZiI6MTYxMTI5ODg0NywiZXhwIjoxNjQyODM0ODQ3LCJzdWIiOiIyOSIsInNjb3BlcyI6W119.H2sYPQsT-uLQvFwA-nvKkKoSsADKpUwUllfVyQVL6h-Pj3EY9IwAy1w0_JpWV3HSgmh_SbCs33X7TEQPt5mLNSLCv2O4fqYBKUUszpYPFqBAMYC_a4oJjlTHIicv2lDAy8NXaBofIooM2T3LkFeFyCeOMlzexs1oxOf8u8g10kO0dGzyqay1NFJESYnKlHlH7VeJMz215YfXrKH_hFa-BhZDJJvMOYQb2QW3RTzfhany8TRU4MmRbyPT1IOnjrVTaSdhCTckR1p6raMYLeMC09kztSfXuNU118g3S4ogF3SPr2oKPSfoJ9AHMY0tC4Y79GX1x4v0jVh8PegIl31hZ2ApQIaUYks_skpCYG9lIBpvjMetvtSc7SBujGfSFaFI1nP1sL-j2FlboXTpupGdzanAAikPLAMwaMs8OZjZTbEaDIiEOoFJnSog4_97hgVECrgmeHINafMi2or-Sn2iw2hE2_DMHMuZuF13gQz-34yMlYxnAyPX8jwqmgyeZxevEKCTwfuJtshLfJDGEI9ymyDiJjo5ZtNi95Orb8DMsKxSMEEg0N5kSy9efK7jeo9xazDe9sc4wIjxIGeHND_Q24DPyygRTcFtI-Q2Mt_L46vE9U3HDjOTiGI-lsA-I9-IGca-P-B1IUSlqsTKp97fvRfKFl2Qk6FkEtDPOETtdJ8";
 
-  ///SignIn
-  static Future<Map> signIn(String email, String password) async {
-    var data = {"email": email, "password": password};
-    var res = await CallApi().postData(data, '/login');
-    var body = await json.decode(res.body);
-
-    return body;
-  }
-
   /// Get Countries
   static Future<List<List<String>>> getCountries() async {
     var res = await CallApi().getData('/api-countries');

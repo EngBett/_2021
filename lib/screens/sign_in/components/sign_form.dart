@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
 import 'package:new_aylf_mobile/components/form_error.dart';
 import 'package:new_aylf_mobile/helpers/general_controller.dart';
+import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
+import 'package:new_aylf_mobile/services/controllers/auth.dart';
 import 'package:new_aylf_mobile/screens/forgot_password/forgot_password_screen.dart';
 import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,7 +165,7 @@ class _SignFormState extends State<SignForm> {
       return;
     }
 
-    var loginData = await Controller.signIn(email, password);
+    var loginData = await Auth.login(email,password);
 
     if(loginData.containsKey("access_token")){
 
@@ -176,8 +178,8 @@ class _SignFormState extends State<SignForm> {
       await storage.setString('group_name', group['name']);
       var res = await storage.setString('region_name', group['region']['name']);
 
-
       //Sign In
+      Navigator.popUntil(context, ModalRoute.withName(SplashScreen.routeName));
       Navigator.pushNamed(context, NavigationScreen.routeName, arguments: res);
 
     }else{

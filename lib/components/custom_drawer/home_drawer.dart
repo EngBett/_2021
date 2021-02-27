@@ -229,8 +229,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 onTap: () async {
                   var storage = await SharedPreferences.getInstance();
                   storage.clear();
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(SplashScreen.routeName));
+                  Navigator.pushNamed(context, SignInScreen.routeName, arguments: true);
                 },
               ),
               SizedBox(

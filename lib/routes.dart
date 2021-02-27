@@ -2,6 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:new_aylf_mobile/screens/activities/activity_screen.dart';
 import 'package:new_aylf_mobile/screens/activity_view/activity_view_screen.dart';
 import 'package:new_aylf_mobile/screens/complete_profile/complete_profile_screen.dart';
+import 'package:new_aylf_mobile/screens/choose_country/choose_country_screen.dart';
+import 'package:new_aylf_mobile/screens/choose_region/choose_region_screen.dart';
+import 'package:new_aylf_mobile/screens/choose_group/choose_group_screen.dart';
 import 'package:new_aylf_mobile/screens/event_view/event_view_screen.dart';
 import 'package:new_aylf_mobile/screens/events/events_screen.dart';
 import 'package:new_aylf_mobile/screens/forgot_password/forgot_password_screen.dart';
@@ -22,6 +25,9 @@ final Map<String, WidgetBuilder> routes = {
   SignInScreen.routeName: (context) => SignInScreen(),
   ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
   SignUpScreen.routeName: (context) => SignUpScreen(),
+  ChooseCountry.routeName: (context) => ChooseCountry(),
+  ChooseRegion.routeName: (context) => ChooseRegion(),
+  ChooseGroup.routeName: (context) => ChooseGroup(),
   CompleteProfileScreen.routeName: (context) => CompleteProfileScreen(),
   NavigationScreen.routeName: (context) => NavigationScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),

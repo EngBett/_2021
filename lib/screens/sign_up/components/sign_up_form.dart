@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
 import 'package:new_aylf_mobile/components/default_button.dart';
 import 'package:new_aylf_mobile/components/form_error.dart';
+import 'package:new_aylf_mobile/helpers/general_controller.dart';
 import 'package:new_aylf_mobile/screens/complete_profile/complete_profile_screen.dart';
 
 import '../../../constants.dart';
@@ -34,6 +35,7 @@ class _SignUpFormState extends State<SignUpForm> {
         errors.remove(error);
       });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -161,4 +163,5 @@ class _SignUpFormState extends State<SignUpForm> {
       ),
     );
   }
+
 }
