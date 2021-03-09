@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/default_button.dart';
-import 'package:new_aylf_mobile/components/no_account_text.dart';
-import 'package:new_aylf_mobile/components/socal_card.dart';
-import 'package:new_aylf_mobile/helpers/api.dart';
-import 'package:new_aylf_mobile/screens/choose_group/choose_group_screen.dart';
+import 'package:aylf/components/default_button.dart';
+import 'package:aylf/components/no_account_text.dart';
+import 'package:aylf/components/socal_card.dart';
+import 'package:aylf/helpers/api.dart';
+import 'package:aylf/screens/choose_group/choose_group_screen.dart';
 import '../../../size_config.dart';
 
 class Body extends StatefulWidget {

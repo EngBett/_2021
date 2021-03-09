@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/event_view/event_view_screen.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/event_view/event_view_screen.dart';
 import 'dart:math' as math;
 
 import '../../../app_theme.dart';

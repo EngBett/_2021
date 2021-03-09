@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:new_aylf_mobile/constants.dart';
+import 'package:aylf/constants.dart';
 
 import '../../../size_config.dart';
 import 'member_ui_view.dart';
 
 class Body extends StatefulWidget {
-  final List<Map> members;
+  final List<dynamic> members;
 
   const Body({Key key, this.members}) : super(key: key);
   @override

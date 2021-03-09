@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/app_theme.dart';
+import 'package:aylf/app_theme.dart';
 
 import '../../../size_config.dart';
 

@@ -1,23 +1,24 @@
 import 'package:flutter/widgets.dart';
-import 'package:new_aylf_mobile/screens/activities/activity_screen.dart';
-import 'package:new_aylf_mobile/screens/activity_view/activity_view_screen.dart';
-import 'package:new_aylf_mobile/screens/complete_profile/complete_profile_screen.dart';
-import 'package:new_aylf_mobile/screens/choose_country/choose_country_screen.dart';
-import 'package:new_aylf_mobile/screens/choose_region/choose_region_screen.dart';
-import 'package:new_aylf_mobile/screens/choose_group/choose_group_screen.dart';
-import 'package:new_aylf_mobile/screens/event_view/event_view_screen.dart';
-import 'package:new_aylf_mobile/screens/events/events_screen.dart';
-import 'package:new_aylf_mobile/screens/forgot_password/forgot_password_screen.dart';
-import 'package:new_aylf_mobile/screens/group/group_screen.dart';
-import 'package:new_aylf_mobile/screens/members/members_screen.dart';
-import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
-import 'package:new_aylf_mobile/screens/notifications/notifications_screen.dart';
-import 'package:new_aylf_mobile/screens/profile/profile_screen.dart';
-import 'package:new_aylf_mobile/screens/resources/resources_screen.dart';
-import 'package:new_aylf_mobile/screens/sign_up/sign_up_screen.dart';
-import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
-import 'package:new_aylf_mobile/screens/sign_in/sign_in_screen.dart';
-import 'package:new_aylf_mobile/screens/youtube/youtube_screen.dart';
+import 'package:aylf/screens/activities/activity_screen.dart';
+import 'package:aylf/screens/activity_view/activity_view_screen.dart';
+import 'package:aylf/screens/complete_profile/complete_profile_screen.dart';
+import 'package:aylf/screens/choose_country/choose_country_screen.dart';
+import 'package:aylf/screens/choose_region/choose_region_screen.dart';
+import 'package:aylf/screens/choose_group/choose_group_screen.dart';
+import 'package:aylf/screens/event_view/event_view_screen.dart';
+import 'package:aylf/screens/events/events_screen.dart';
+import 'package:aylf/screens/forgot_password/forgot_password_screen.dart';
+import 'package:aylf/screens/verify_email/verify_email_screen.dart';
+import 'package:aylf/screens/group/group_screen.dart';
+import 'package:aylf/screens/members/members_screen.dart';
+import 'package:aylf/screens/navigation/navigation_screen.dart';
+import 'package:aylf/screens/notifications/notifications_screen.dart';
+import 'package:aylf/screens/profile/profile_screen.dart';
+import 'package:aylf/screens/resources/resources_screen.dart';
+import 'package:aylf/screens/sign_up/sign_up_screen.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
+import 'package:aylf/screens/sign_in/sign_in_screen.dart';
+import 'package:aylf/screens/youtube/youtube_screen.dart';
 
 //Named routes
 final Map<String, WidgetBuilder> routes = {
@@ -25,6 +26,7 @@ final Map<String, WidgetBuilder> routes = {
   SignInScreen.routeName: (context) => SignInScreen(),
   ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
   SignUpScreen.routeName: (context) => SignUpScreen(),
+  VerifyEmailScreen.routeName:(context)=> VerifyEmailScreen(),
   ChooseCountry.routeName: (context) => ChooseCountry(),
   ChooseRegion.routeName: (context) => ChooseRegion(),
   ChooseGroup.routeName: (context) => ChooseGroup(),

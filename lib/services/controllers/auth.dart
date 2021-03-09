@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:new_aylf_mobile/helpers/api.dart';
+import 'package:aylf/helpers/api.dart';
 
 class Auth{
   static Future<Map> login(String email, String password) async {
@@ -14,32 +14,7 @@ class Auth{
 
   }
 
-  static Future<Map> register(
-      String firstName,
-      String middleName,
-      String lastName,
-      String email,
-      String phone,
-      String dob,
-      String groupId,
-      String gender,
-      String password,
-      String confirmPassword
-      ) async {
-
-    var data = {
-      "firstname": firstName,
-      "middlename": middleName,
-      "lastname": lastName,
-      "email": email,
-      "phone": phone,
-      "group_id": groupId,
-      "dob": dob,
-      "gender": gender,
-      "password":password,
-      "password_confirmation": confirmPassword
-    };
-
+  static Future<Map> register(Map data) async {
     var res = await CallApi().postData(data, '/register');
 
     return json.decode(res.body);

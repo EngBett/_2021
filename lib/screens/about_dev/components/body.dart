@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
+import 'package:aylf/helpers/hex_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_theme.dart';

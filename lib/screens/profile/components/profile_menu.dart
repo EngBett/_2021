@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../constants.dart';
 
-class ProfileMenu extends StatelessWidget {
+class ProfileMenu extends StatefulWidget {
   const ProfileMenu({
     Key key,
     @required this.text,
@@ -17,6 +17,11 @@ class ProfileMenu extends StatelessWidget {
   final Icon alt;
 
   @override
+  _ProfileMenuState createState() => _ProfileMenuState();
+}
+
+class _ProfileMenuState extends State<ProfileMenu> {
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -24,18 +29,18 @@ class ProfileMenu extends StatelessWidget {
         padding: EdgeInsets.all(20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         color: Color(0xFFF5F6F9),
-        onPressed: press,
+        onPressed: widget.press,
         child: Row(
           children: [
-            alt == null
+            widget.alt == null
                 ? SvgPicture.asset(
-              icon,
+              widget.icon,
               color: kPrimaryColor,
               width: 22,
             )
-                : alt,
+                : widget.alt,
             SizedBox(width: 20),
-            Expanded(child: Text(text)),
+            Expanded(child: Text(widget.text)),
             Icon(Icons.arrow_forward_ios),
           ],
         ),

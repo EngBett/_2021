@@ -3,11 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/helpers/api.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/profile/profile_screen.dart';
-import 'package:new_aylf_mobile/screens/sign_in/sign_in_screen.dart';
-import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:aylf/helpers/api.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/profile/profile_screen.dart';
+import 'package:aylf/screens/sign_in/sign_in_screen.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_theme.dart';
@@ -32,6 +33,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
 
   Map _user;
+  SharedPreferences _storage;
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     var res = await CallApi().getDataWToken("/api-user/$userId", token);
 
     setState(() {
+      _storage = storage;
       _user = json.decode(res.body);
     });
   }
@@ -95,150 +98,146 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.notWhite.withOpacity(0.5),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(top: 5.0),
-            color: AppTheme.aylfLighter,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image:
-                            ExactAssetImage("assets/images/aylf_upscaled.png"),
-                        fit: BoxFit.contain,
-                      ),
-                    ), //BoxDecoration
-                  ),
-                  AnimatedBuilder(
-                    animation: widget.iconAnimationController,
-                    builder: (BuildContext context, Widget child) {
-                      return ScaleTransition(
-                        scale: AlwaysStoppedAnimation<double>(
-                            1.0 - (widget.iconAnimationController.value) * 0.2),
-                        child: RotationTransition(
-                          turns: AlwaysStoppedAnimation<double>(Tween<double>(
-                                      begin: 0.0, end: 24.0)
-                                  .animate(CurvedAnimation(
-                                      parent: widget.iconAnimationController,
-                                      curve: Curves.fastOutSlowIn))
-                                  .value /
-                              360),
-                          child: Container(
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: AppTheme.grey.withOpacity(0.6),
-                                    offset: const Offset(2.0, 4.0),
-                                    blurRadius: 8),
-                              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.only(top: 5.0),
+          color: AppTheme.aylfLighter,
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image:
+                      ExactAssetImage("assets/images/aylf_upscaled.png"),
+                      fit: BoxFit.contain,
+                    ),
+                  ), //BoxDecoration
+                ),
+                AnimatedBuilder(
+                  animation: widget.iconAnimationController,
+                  builder: (BuildContext context, Widget child) {
+                    return ScaleTransition(
+                      scale: AlwaysStoppedAnimation<double>(
+                          1.0 - (widget.iconAnimationController.value) * 0.2),
+                      child: RotationTransition(
+                        turns: AlwaysStoppedAnimation<double>(Tween<double>(
+                            begin: 0.0, end: 24.0)
+                            .animate(CurvedAnimation(
+                            parent: widget.iconAnimationController,
+                            curve: Curves.fastOutSlowIn))
+                            .value /
+                            360),
+                        child: Container(
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: AppTheme.grey.withOpacity(0.6),
+                                  offset: const Offset(2.0, 4.0),
+                                  blurRadius: 8),
+                            ],
+                          ),
+                          child: GestureDetector(
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(40.0)),
+                              child: _user == null
+                                  ? Image.asset(
+                                  'assets/images/default-user-image.png')
+                                  : Image.network(
+                                  "https://ui-avatars.com/api/?size=512&name=${_user["data"]['firstname']}+${_user["data"]['lastname']}"),
                             ),
-                            child: GestureDetector(
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(40.0)),
-                                child: _user == null
-                                    ? Image.asset(
-                                        'assets/images/default-user-image.png')
-                                    : Image.network(
-                                        "https://ui-avatars.com/api/?size=512&name=${_user["data"]['firstname']}+${_user["data"]['lastname']}"),
-                              ),
-                              onTap: () async {
-                                if (_user != null) {
-                                  Navigator.pushNamed(
-                                      context, ProfileScreen.routeName,
-                                      arguments: _user);
-                                }
-                              },
-                            ),
+                            onTap: () async {
+                              if (_user != null) {
+                                Navigator.pushNamed(
+                                    context, ProfileScreen.routeName,
+                                    arguments: _user);
+                              }
+                            },
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 4),
-                    child: Text(
-                      _user == null
-                          ? 'Waiting...'
-                          : "${_user["data"]['firstname']} ${_user["data"]['lastname']}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.grey,
-                        fontSize: 16,
                       ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 4),
+                  child: Text(
+                    _user == null
+                        ? 'Waiting...'
+                        : "${_user["data"]['firstname']} ${_user["data"]['lastname']}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.grey,
+                      fontSize: 16,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 4,
+        ),
+        const SizedBox(
+          height: 4,
+        ),
+        Divider(
+          height: 1,
+          color: AppTheme.grey.withOpacity(0),
+        ),
+        Expanded(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(0.0),
+            itemCount: drawerList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return inkwell(drawerList[index]);
+            },
           ),
-          Divider(
-            height: 1,
-            color: AppTheme.grey.withOpacity(0),
-          ),
-          Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(0.0),
-              itemCount: drawerList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return inkwell(drawerList[index]);
+        ),
+        Divider(
+          height: 1,
+          color: AppTheme.grey.withOpacity(0.6),
+        ),
+        Column(
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                'Sign Out',
+                style: TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: AppTheme.aylfDark2,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              trailing: Icon(
+                Icons.power_settings_new,
+                color: Colors.red,
+              ),
+              onTap: () async {
+                _storage.clear();
+                Navigator.popUntil(context, ModalRoute.withName(SplashScreen.routeName));
               },
             ),
-          ),
-          Divider(
-            height: 1,
-            color: AppTheme.grey.withOpacity(0.6),
-          ),
-          Column(
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppTheme.aylfDark2,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                trailing: Icon(
-                  Icons.power_settings_new,
-                  color: Colors.red,
-                ),
-                onTap: () async {
-                  var storage = await SharedPreferences.getInstance();
-                  storage.clear();
-                  Navigator.pushNamed(context, SignInScreen.routeName, arguments: true);
-                },
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
-            ],
-          ),
-        ],
-      ),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
+        ),
+      ],
     );
   }
 

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/size_config.dart';
+import 'package:aylf/size_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app_theme.dart';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:aylf/constants.dart';
 
 import '../../../app_theme.dart';
 
@@ -86,7 +87,8 @@ class MemberUIView extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(40.0)),
-                                    child: Image.asset('images/default-user-image.png'),
+                                    child: Image.network(
+                                        "https://ui-avatars.com/api/?size=512&name=${name.split(" ")[0]}+${name.split(" ")[1]}&font-size=0.33&background=D5A52E&color=fff&bold=true"),
                                   ),
                                   onTap: () async{
 
@@ -111,7 +113,7 @@ class MemberUIView extends StatelessWidget {
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16,
                                           letterSpacing: 0.27,
-                                          color: AppTheme.aylfDark,
+                                          color: kPrimaryColor,
                                         ),
                                       ),
 

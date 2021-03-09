@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:new_aylf_mobile/helpers/api.dart';
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
+import 'package:aylf/helpers/api.dart';
+import 'package:aylf/helpers/general_controller.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/navigation/navigation_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app_theme.dart';
 import '../../../size_config.dart';
@@ -13,8 +15,9 @@ import 'calendar_popup_view.dart';
 
 class Body extends StatefulWidget {
   final Map activity;
+  final bool volunteered;
 
-  const Body({Key key, this.activity}) : super(key: key);
+  const Body({Key key, this.activity, this.volunteered}) : super(key: key);
 
   @override
   _BodyState createState() => _BodyState();
@@ -44,6 +47,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     _positionsLeft = widget.activity['volunteers_needed'] -
         widget.activity['volunteers'].length;
 
+    _getToken();
+
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -53,10 +58,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     super.initState();
   }
 
-  void checkVolunteered() async {
-    var checker = await Controller.checkIfVolunteered(widget.activity['id']);
+  _getToken() async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
     setState(() {
-      status = checker["volunteered"];
+      _token = storage.getString('token');
     });
   }
 
@@ -78,7 +83,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("\n\n\n${widget.activity}\n\n\n\n");
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
@@ -229,9 +234,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             Divider(
               height: 1,
             ),
-            if (status != null)
-              !status["volunteered"]
-                  ? AnimatedOpacity(
+            !widget.volunteered
+                ? Expanded(
+                  child: AnimatedOpacity(
                       opacity: opacity2,
                       duration: const Duration(milliseconds: 500),
                       child: Row(
@@ -249,8 +254,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 Radius.circular(4.0),
                               ),
                               onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
+                                FocusScope.of(context).requestFocus(FocusNode());
                                 // setState(() {
                                 //   isDatePopupOpen = true;
                                 // });
@@ -267,9 +271,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       height: 12,
                                     ),
                                     SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                50,
+                                        width: MediaQuery.of(context).size.width -
+                                            50,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -307,58 +310,58 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           )
                         ],
                       ),
-                    )
-                  : SizedBox(),
-            if (status != null)
-              !status["volunteered"]
-                  ? AnimatedOpacity(
-                      duration: const Duration(milliseconds: 500),
-                      opacity: opacity3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 16, bottom: 16, right: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: InkWell(
-                                onTap: _volunteer,
-                                child: Container(
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.aylfMain,
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(16.0),
-                                    ),
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                          color: AppTheme.aylfMain
-                                              .withOpacity(0.5),
-                                          offset: const Offset(1.1, 1.1),
-                                          blurRadius: 10.0),
-                                    ],
+                    ),
+                )
+                : SizedBox(),
+            !widget.volunteered
+                ? AnimatedOpacity(
+                    duration: const Duration(milliseconds: 500),
+                    opacity: opacity3,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, bottom: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: InkWell(
+                              onTap: _volunteer,
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.aylfMain,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16.0),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      _loading ? 'Loading ...' : 'Volunteer',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
-                                        letterSpacing: 0.0,
-                                        color: AppTheme.nearlyWhite,
-                                      ),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color:
+                                            AppTheme.aylfMain.withOpacity(0.5),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 10.0),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    _loading ? 'Loading ...' : 'Volunteer',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      letterSpacing: 0.0,
+                                      color: AppTheme.nearlyWhite,
                                     ),
                                   ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  : SizedBox(),
+                    ),
+                  )
+                : SizedBox(),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
             )
@@ -453,9 +456,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             "activity_id": widget.activity["id"]
           };
 
-          var res =
-              await CallApi().postDataWToken(data, '/api-volunteer', _token);
-          /*var body = await json.decode(res.body);*/
+          var res = await CallApi().postDataWToken(data, '/api-volunteer', _token);
+          var body = await json.decode(res.body);
 
           setState(() {
             _loading = false;
@@ -466,65 +468,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           Navigator.of(context)
               .popUntil(ModalRoute.withName(NavigationScreen.routeName));
         } else {
-          _scaffoldKey.currentState.showSnackBar(_datesMissing());
+          _datesMissing();
         }
       } else {
-        _scaffoldKey.currentState.showSnackBar(_noInternetSnackBar());
+       _showNoInternetModal();
       }
     }
   }
 
-  Widget _datesMissing() {
-    return SnackBar(
-      backgroundColor: HexColor("CFE7F1"),
-      duration: Duration(milliseconds: 2000),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.warning,
-            size: 50,
-            color: Colors.red,
-          ),
-          SizedBox(width: 20),
-          Text(
-            'Please choose dates',
-            style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                color: Colors.red.withOpacity(.8),
-                fontWeight: FontWeight.bold),
-          ),
-        ],
+  _datesMissing() {
+    showModalBottomSheet(context: context, builder: (BuildContext context) => Container(
+      height: getProportionateScreenHeight(50),
+      color: Colors.white,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('Please choose dates'),
+          ],
+        ),
       ),
-    );
-  }
-
-  Widget _noInternetSnackBar() {
-    return SnackBar(
-      backgroundColor: HexColor("CFE7F1"),
-      duration: Duration(milliseconds: 4000),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 50,
-            child: Image.asset('images/no_internet.gif'),
-          ),
-          SizedBox(width: 20),
-          Text(
-            'No internet connection',
-            style: TextStyle(
-                fontFamily: AppTheme.fontName,
-                fontSize: 14,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
+    ));
   }
 
   Future<bool> getConnection() async {
@@ -537,5 +502,21 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     } on SocketException catch (_) {
       return false;
     }
+  }
+
+  _showNoInternetModal(){
+    showModalBottomSheet(context: context, builder: (BuildContext context) => Container(
+      height: getProportionateScreenHeight(50),
+      color: Colors.white,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('Check your internet connection...'),
+          ],
+        ),
+      ),
+    ));
   }
 }

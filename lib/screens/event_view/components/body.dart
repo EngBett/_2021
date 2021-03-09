@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/size_config.dart';
+import 'package:aylf/size_config.dart';
 
 import '../../../app_theme.dart';
 
@@ -206,8 +206,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
               ),
             ),
           ),
+
           SizedBox(
-            height: MediaQuery.of(context).padding.bottom,
+            height: getProportionateScreenHeight(60),
           )
         ],
       ),

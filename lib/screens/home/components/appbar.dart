@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/notifications/notifications_screen.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/notifications/notifications_screen.dart';
 
 import '../../../size_config.dart';
 import 'icon_btn_with_counter.dart';
 
 class HomeAppBar extends StatefulWidget {
+  final int notifications;
+
+  const HomeAppBar({Key key, this.notifications}) : super(key: key);
   @override
   _HomeAppBarState createState() => _HomeAppBarState();
 }
@@ -66,7 +69,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
                   IconBtnWithCounter(
                     svgSrc: "assets/icons/Bell.svg",
-                    numOfitem: 3,
+                    numOfitem: widget.notifications,
                     press: () {
                       Navigator.pushNamed(context, NotificationsScreen.routeName);
                     },

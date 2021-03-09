@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/activity_view/activity_view_screen.dart';
+import 'package:aylf/helpers/general_controller.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/activity_view/activity_view_screen.dart';
 
 import '../../../app_theme.dart';
 
@@ -28,9 +28,9 @@ class ActivityView extends StatefulWidget {
 
 class _ActivityViewState extends State<ActivityView> {
   bool _volunteered;
-
   @override
   void initState() {
+    checkVolunteered();
     super.initState();
   }
 
@@ -42,13 +42,13 @@ class _ActivityViewState extends State<ActivityView> {
   }
 
   void moveTo() {
-    Navigator.pushNamed(context, ActivityViewScreen.routeName, arguments:widget.activity);
+    Navigator.pushNamed(context, ActivityViewScreen.routeName, arguments:{"activity":widget.activity,"volunteered":_volunteered});
   }
 
   @override
   Widget build(BuildContext context) {
-    int _positionsLeft = widget.activity['volunteers_needed'] -
-        widget.activity['volunteers'].length;
+    int _positionsLeft = 0/*widget.activity['volunteers_needed'] -
+        widget.activity['volunteers'].length*/;
 
     return AnimatedBuilder(
       animation: widget.animationController,
@@ -99,7 +99,7 @@ class _ActivityViewState extends State<ActivityView> {
                                             padding: const EdgeInsets.only(
                                                 left: 4, bottom: 2),
                                             child: Text(
-                                              widget.activity['name'],
+                                              "${widget.activity['name']}",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily: AppTheme.futura,

@@ -1,4 +1,4 @@
-package com.icodeio.new_aylf_mobile
+package com.icodeio.aylf
 
 import io.flutter.embedding.android.FlutterActivity
 

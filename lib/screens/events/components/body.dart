@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:new_aylf_mobile/constants.dart';
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
+import 'package:aylf/constants.dart';
+import 'package:aylf/helpers/general_controller.dart';
 
 import '../../../size_config.dart';
 import 'event_view.dart';
 
 class Body extends StatefulWidget {
-  final List<Map> groupEvents;
+  final int groupId;
 
-  const Body({Key key, this.groupEvents}) : super(key: key);
+  const Body({Key key, this.groupId}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -41,10 +41,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   Future<void> getEvents() async{
     List<Map> e;
-    if(widget.groupEvents == null){
+    if(widget.groupId == null){
       e = await Controller.getEvents();
     }else{
-      e = widget.groupEvents;
+      e = await Controller.getGroupEvents(widget.groupId);
     }
 
     setState(() {

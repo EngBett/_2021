@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
-import 'package:new_aylf_mobile/theme.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
+import 'package:aylf/theme.dart';
 
 import 'routes.dart';
 
@@ -23,6 +23,11 @@ class MyApp extends StatelessWidget {
       systemNavigationBarDividerColor: Colors.grey,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

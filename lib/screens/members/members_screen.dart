@@ -6,7 +6,7 @@ class MembersScreen extends StatelessWidget {
   static String routeName = "/members";
   @override
   Widget build(BuildContext context) {
-    List<Map> members = ModalRoute.of(context).settings.arguments;
+    List<dynamic> members = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text("Members"),

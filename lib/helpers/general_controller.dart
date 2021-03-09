@@ -5,8 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
 
 class Controller {
-  static String token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjkyZjZkNTczMmRkNDQ0Y2NhYzFjNjc4N2IzM2QyZjA4NWE2MmVmYjM3M2VlYzM0YjBjMWY5ZmExZTkyZGZhZThiN2Q4ZGQyZThhMTViYTdlIn0.eyJhdWQiOiIxIiwianRpIjoiOTJmNmQ1NzMyZGQ0NDRjY2FjMWM2Nzg3YjMzZDJmMDg1YTYyZWZiMzczZWVjMzRiMGMxZjlmYTFlOTJkZmFlOGI3ZDhkZDJlOGExNWJhN2UiLCJpYXQiOjE2MTEyOTg4NDcsIm5iZiI6MTYxMTI5ODg0NywiZXhwIjoxNjQyODM0ODQ3LCJzdWIiOiIyOSIsInNjb3BlcyI6W119.H2sYPQsT-uLQvFwA-nvKkKoSsADKpUwUllfVyQVL6h-Pj3EY9IwAy1w0_JpWV3HSgmh_SbCs33X7TEQPt5mLNSLCv2O4fqYBKUUszpYPFqBAMYC_a4oJjlTHIicv2lDAy8NXaBofIooM2T3LkFeFyCeOMlzexs1oxOf8u8g10kO0dGzyqay1NFJESYnKlHlH7VeJMz215YfXrKH_hFa-BhZDJJvMOYQb2QW3RTzfhany8TRU4MmRbyPT1IOnjrVTaSdhCTckR1p6raMYLeMC09kztSfXuNU118g3S4ogF3SPr2oKPSfoJ9AHMY0tC4Y79GX1x4v0jVh8PegIl31hZ2ApQIaUYks_skpCYG9lIBpvjMetvtSc7SBujGfSFaFI1nP1sL-j2FlboXTpupGdzanAAikPLAMwaMs8OZjZTbEaDIiEOoFJnSog4_97hgVECrgmeHINafMi2or-Sn2iw2hE2_DMHMuZuF13gQz-34yMlYxnAyPX8jwqmgyeZxevEKCTwfuJtshLfJDGEI9ymyDiJjo5ZtNi95Orb8DMsKxSMEEg0N5kSy9efK7jeo9xazDe9sc4wIjxIGeHND_Q24DPyygRTcFtI-Q2Mt_L46vE9U3HDjOTiGI-lsA-I9-IGca-P-B1IUSlqsTKp97fvRfKFl2Qk6FkEtDPOETtdJ8";
+
 
   /// Get Countries
   static Future<List<List<String>>> getCountries() async {
@@ -76,8 +75,8 @@ class Controller {
     List<Map> fullData = [];
     var storage = await SharedPreferences.getInstance();
 
-    //var res = await CallApi().getDataWToken("/api-activities", storage.get('token'));
-    var res = await CallApi().getDataWToken("/api-activities", token);
+    var res = await CallApi().getDataWToken("/api-activities", storage.get('token'));
+
     var body = await json.decode(res.body);
 
     for (Map data in body['data']) {
@@ -92,9 +91,8 @@ class Controller {
     Map data;
     var storage = await SharedPreferences.getInstance();
 
-    //var res = await CallApi().getDataWToken("/api-activities/$activityId", storage.get('token'));
-    var res = await CallApi()
-        .getDataWToken("/api-activities/$activityId", storage.get('token'));
+    var res = await CallApi().getDataWToken("/api-activities/$activityId", storage.get('token'));
+
     var body = await json.decode(res.body);
 
     data = body["data"];
@@ -104,17 +102,14 @@ class Controller {
 
   /// Get group activities
   static Future<Map> checkIfVolunteered(int activityId) async {
-    Map data;
+
     var storage = await SharedPreferences.getInstance();
 
-    //var res = await CallApi().getDataWToken("/api-check-if-volunteered/$activityId", storage.get('token'));
-    var res = await CallApi()
-        .getDataWToken("/api-check-if-volunteered/$activityId", token);
+    var res = await CallApi().getDataWToken("/api-check-if-volunteered/$activityId", storage.get('token'));
+
     var body = await json.decode(res.body);
 
-    data = body;
-
-    return data;
+    return body;
   }
 
   /// Get group activities
@@ -191,7 +186,10 @@ class Controller {
     var body = await json.decode(res.body);
 
     for (Map data in body['data']) {
-      fullData.add(data);
+      if(data["activity"]==null){
+        continue;
+      }
+      fullData.add(data["activity"]);
     }
 
     return fullData;
@@ -202,8 +200,8 @@ class Controller {
     List<Map> fullData = [];
     var storage = await SharedPreferences.getInstance();
 
-    //var res = await CallApi().getDataWToken("/api-events", storage.get('token'));
-    var res = await CallApi().getDataWToken("/api-events", token);
+    var res = await CallApi().getDataWToken("/api-events", storage.get('token'));
+
     var body = await json.decode(res.body);
 
     for (Map data in body['data']) {
@@ -218,8 +216,8 @@ class Controller {
     List<Map> fullData = [];
     var storage = await SharedPreferences.getInstance();
 
-    //var res = await CallApi().getDataWToken("/api-resources", storage.get('token'));
-    var res = await CallApi().getDataWToken("/api-resources", token);
+    var res = await CallApi().getDataWToken("/api-resources", storage.get('token'));
+
     var body = await json.decode(res.body);
 
     for (Map data in body['data']) {

@@ -7,10 +7,14 @@ class EventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map> events = ModalRoute.of(context).settings.arguments;
+    final int groupId = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
-          title: Text("Events"),
+          title: Text(
+            groupId==null
+                ? "Events"
+                : "Group Events"
+          ),
         ),
         body: InkWell(
             splashColor: Colors.transparent,
@@ -20,6 +24,6 @@ class EventScreen extends StatelessWidget {
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: Body(groupEvents: events,)));
+            child: Body(groupId: groupId,)));
   }
 }

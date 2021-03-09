@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
-import 'package:new_aylf_mobile/components/default_button.dart';
-import 'package:new_aylf_mobile/components/form_error.dart';
-import 'package:new_aylf_mobile/components/no_account_text.dart';
+import 'package:aylf/app_theme.dart';
+import 'package:aylf/components/custom_surfix_icon.dart';
+import 'package:aylf/components/default_button.dart';
+import 'package:aylf/components/form_error.dart';
+import 'package:aylf/components/no_account_text.dart';
+import 'package:aylf/helpers/api.dart';
+import 'package:aylf/screens/sign_in/sign_in_screen.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -44,6 +50,9 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
   final _formKey = GlobalKey<FormState>();
   List<String> errors = [];
   String email;
+  bool _isLoading = false;
+  String _successMessage = "";
+  TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -51,6 +60,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
       child: Column(
         children: [
           TextFormField(
+            controller: emailController,
             keyboardType: TextInputType.emailAddress,
             onSaved: (newValue) => email = newValue,
             onChanged: (value) {
@@ -64,6 +74,9 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
                   errors.remove(kInvalidEmailError);
                 });
               }
+              setState(() {
+                errors.clear();
+              });
               return null;
             },
             validator: (value) {
@@ -92,15 +105,73 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
           FormError(errors: errors),
           SizedBox(height: SizeConfig.screenHeight * 0.1),
           DefaultButton(
-            text: "Continue",
-            press: () {
+            text: _isLoading?"Sending...":"Send link",
+            press: () async {
               if (_formKey.currentState.validate()) {
-                // Do what you want to do
+                setState(() {
+                  _isLoading = !_isLoading;
+                });
+
+
+                print(emailController.text);
+
+                var data = {
+                  "email": emailController.text
+                };
+
+                var res = await CallApi().postData(data, '/password/email');
+                var body = json.decode(res.body);
+
+
+                if(res.statusCode == 200){
+
+                  setState((){
+                    _successMessage = body["message"];
+                    emailController.clear();
+                  });
+
+
+                }else{
+                  setState((){
+                    errors.add(body['message']);
+                    emailController.clear();
+                  });
+                }
+
+
+                setState(() {
+                  _isLoading = !_isLoading;
+                  emailController.clear();
+                });
               }
             },
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.1),
-          NoAccountText(),
+          Center(
+            child: Text("$_successMessage",style: TextStyle(fontFamily: "futura",fontWeight: FontWeight.bold,color: Colors.green),),
+          ),
+          SizedBox(height: SizeConfig.screenHeight * 0.1),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Back to ",
+                style: TextStyle(fontSize: getProportionateScreenWidth(16)),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.popUntil(context, ModalRoute.withName(SplashScreen.routeName));
+                  Navigator.pushNamed(context, SignInScreen.routeName);
+                },
+                child: Text(
+                  "Sign In",
+                  style: TextStyle(
+                      fontSize: getProportionateScreenWidth(16),
+                      color: kPrimaryColor),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

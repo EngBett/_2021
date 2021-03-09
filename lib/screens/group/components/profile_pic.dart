@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:new_aylf_mobile/app_theme.dart';
+import 'package:aylf/app_theme.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({

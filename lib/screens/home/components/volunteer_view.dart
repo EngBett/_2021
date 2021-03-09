@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/youtube/youtube_screen.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/youtube/youtube_screen.dart';
 
 import '../../../app_theme.dart';
 

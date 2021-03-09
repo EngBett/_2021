@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:new_aylf_mobile/constants.dart';
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
+import 'package:aylf/constants.dart';
+import 'package:aylf/helpers/general_controller.dart';
 
 import '../../../size_config.dart';
 import 'activity_view.dart';
 
 class Body extends StatefulWidget {
   final int groupId;
+  final bool userActivities;
 
-  const Body({Key key, this.groupId}) : super(key: key);
+  const Body({Key key, this.groupId, this.userActivities}) : super(key: key);
   @override
   _BodyState createState() => _BodyState();
 }
@@ -41,10 +42,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   Future<void> getActivities() async{
     List<Map> e;
-    if(widget.groupId == null){
+
+    if(widget.groupId == null && widget.userActivities == null){
       e = await Controller.getActivities();
-    }else{
+    }else if(widget.groupId != null){
       e = await Controller.getGroupActivities(widget.groupId);
+    }else{
+      e = await Controller.getUserVolunteeredActivities();
     }
 
     setState(() {

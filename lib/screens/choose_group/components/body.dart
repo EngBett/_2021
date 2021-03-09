@@ -1,15 +1,9 @@
-import 'dart:convert';
-
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:new_aylf_mobile/components/default_button.dart';
-import 'package:new_aylf_mobile/components/no_account_text.dart';
-import 'package:new_aylf_mobile/components/socal_card.dart';
-import 'package:new_aylf_mobile/helpers/api.dart';
-import 'package:new_aylf_mobile/screens/choose_region/choose_region_screen.dart';
-import 'package:new_aylf_mobile/screens/complete_profile/complete_profile_screen.dart';
+import 'package:aylf/components/default_button.dart';
+import 'package:aylf/constants.dart';
+import 'package:aylf/helpers/args.dart';
+import 'package:aylf/screens/complete_profile/complete_profile_screen.dart';
 import '../../../size_config.dart';
 
 class Body extends StatefulWidget {
@@ -23,6 +17,9 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   var _errorMessage;
+  bool _male = false;
+  bool _female = false;
+
   String _group;
   List<List<String>> _groups;
 
@@ -62,17 +59,7 @@ class _BodyState extends State<Body> {
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
                 selectRegion(),
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SocalCard(
-                      icon: "assets/icons/google-icon.svg",
-                      press: () {},
-                    ),
-                  ],
-                ),
                 SizedBox(height: getProportionateScreenHeight(20)),
-                NoAccountText(),
               ],
             ),
           ),
@@ -135,6 +122,63 @@ class _BodyState extends State<Body> {
                       child: Text("loading..."),
                     ),
             ),
+            SizedBox(
+              height: getProportionateScreenHeight(30),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Select Gender',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(20),
+            ),
+            Row(
+              children: [
+                Switch(
+                  value: _male,
+                  onChanged: (value) {
+                    setState(() {
+                      _errorMessage = null;
+                      _male = value;
+                      if (_female) {
+                        _female = !_female;
+                      }
+                    });
+                  },
+                  activeTrackColor: kPrimaryColor.withOpacity(.5),
+                  activeColor: kPrimaryColor,
+                ),
+                Text("Male")
+              ],
+            ),
+            Row(
+              children: [
+                Switch(
+                  value: _female,
+                  onChanged: (value) {
+                    setState(() {
+                      _errorMessage = null;
+                      _female = value;
+                      if (_male) {
+                        _male = !_male;
+                      }
+                    });
+                  },
+                  activeTrackColor: kPrimaryColor.withOpacity(.5),
+                  activeColor: kPrimaryColor,
+                ),
+                Text("Female")
+              ],
+            ),
             if (_errorMessage != null)
               SizedBox(
                 height: getProportionateScreenHeight(20),
@@ -147,7 +191,7 @@ class _BodyState extends State<Body> {
           ],
         ),
         SizedBox(
-          height: getProportionateScreenHeight(100.0),
+          height: getProportionateScreenHeight(50),
         ),
         DefaultButton(
           text: "Proceed",
@@ -157,13 +201,23 @@ class _BodyState extends State<Body> {
               setState(() {
                 _errorMessage = "Please choose your group first";
               });
-
+              return;
             }
 
-            Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+            if (!_male && !_female) {
+              setState(() {
+                _errorMessage = "Please select your gender";
+              });
+              return;
+            }
+
+            var args = DetailArgs(_male?"Male":"Female", _group);
+
+            Navigator.pushNamed(context, CompleteProfileScreen.routeName, arguments: args);
           },
         ),
       ],
     );
   }
 }
+

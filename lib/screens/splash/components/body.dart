@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/helpers/hex_color.dart';
-import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
-import 'package:new_aylf_mobile/screens/sign_in/sign_in_screen.dart';
+import 'package:aylf/helpers/hex_color.dart';
+import 'package:aylf/screens/navigation/navigation_screen.dart';
+import 'package:aylf/screens/sign_in/sign_in_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // This is the best practice

@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
-import 'package:new_aylf_mobile/components/default_button.dart';
-import 'package:new_aylf_mobile/components/form_error.dart';
-import 'package:new_aylf_mobile/components/socal_card.dart';
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
+import 'package:aylf/components/custom_surfix_icon.dart';
+import 'package:aylf/components/default_button.dart';
+import 'package:aylf/components/form_error.dart';
+import 'package:aylf/components/socal_card.dart';
+import 'package:aylf/helpers/args.dart';
+import 'package:aylf/helpers/general_controller.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import 'sign_up_form.dart';
 
 class Body extends StatefulWidget {
+  final SignUpArgs signUpArgs;
+
+  const Body({Key key, this.signUpArgs}) : super(key: key);
+
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,7 +44,9 @@ class _BodyState extends State<Body> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
-                SignUpForm(),
+                SignUpForm(
+                  signUpArgs: widget.signUpArgs,
+                ),
 
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
                 Row(

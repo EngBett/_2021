@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/carousel_view.dart';
-import 'package:new_aylf_mobile/size_config.dart';
+import 'package:aylf/components/carousel_view.dart';
+import 'package:aylf/size_config.dart';
 
 class CarouselUi extends StatelessWidget {
   CarouselUi({Key key, this.animationController, this.animation})

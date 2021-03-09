@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
-import 'package:new_aylf_mobile/components/form_error.dart';
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
-import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
-import 'package:new_aylf_mobile/services/controllers/auth.dart';
-import 'package:new_aylf_mobile/screens/forgot_password/forgot_password_screen.dart';
-import 'package:new_aylf_mobile/screens/navigation/navigation_screen.dart';
+import 'package:aylf/components/custom_surfix_icon.dart';
+import 'package:aylf/components/form_error.dart';
+import 'package:aylf/helpers/api.dart';
+import 'package:aylf/helpers/general_controller.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
+import 'package:aylf/services/controllers/auth.dart';
+import 'package:aylf/screens/forgot_password/forgot_password_screen.dart';
+import 'package:aylf/screens/navigation/navigation_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,6 +27,7 @@ class _SignFormState extends State<SignForm> {
   String email;
   String password;
   bool remember = false;
+  bool _isLoading = false;
   final List<String> errors = [];
 
   void addError({String error}) {
@@ -77,11 +80,10 @@ class _SignFormState extends State<SignForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
-            text: "Login",
+            text: _isLoading ? "Signing in..." : "Login",
             press: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-
                 //Sign In
                 _signIn();
               }
@@ -160,14 +162,26 @@ class _SignFormState extends State<SignForm> {
 
   _signIn() async {
 
+    if(_isLoading){
+      return;
+    }
+
     if(!await getConnection()){
       _showNoInternetModal();
       return;
     }
 
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+
+
     var loginData = await Auth.login(email,password);
 
     if(loginData.containsKey("access_token")){
+
+      var fetchDetails = await CallApi().getDataWToken("/api-user-details/${loginData["user"]["group_id"]}", loginData['access_token']);
+      var userDetails = await json.decode(fetchDetails.body);
 
       SharedPreferences storage = await SharedPreferences.getInstance();
 
@@ -176,16 +190,18 @@ class _SignFormState extends State<SignForm> {
       await storage.setInt('user_id', loginData['user']['id']);
       await storage.setInt('group_id', loginData['user']['group_id']);
       await storage.setString('group_name', group['name']);
-      var res = await storage.setString('region_name', group['region']['name']);
+      await storage.setString('region_name', group['region']['name']);
+      await storage.setString('country', userDetails['country']);
 
       //Sign In
       Navigator.popUntil(context, ModalRoute.withName(SplashScreen.routeName));
-      Navigator.pushNamed(context, NavigationScreen.routeName, arguments: res);
+      Navigator.pushNamed(context, NavigationScreen.routeName);
 
     }else{
 
       if (!errors.contains(loginData["message"]))
         setState(() {
+          _isLoading = !_isLoading;
           errors.add(loginData["message"]);
         });
 

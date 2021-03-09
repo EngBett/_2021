@@ -1,7 +1,8 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/screens/group/group_screen.dart';
-import 'package:new_aylf_mobile/screens/splash/splash_screen.dart';
+import 'package:aylf/screens/activities/activity_screen.dart';
+import 'package:aylf/screens/group/group_screen.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app_theme.dart';
@@ -42,7 +43,10 @@ class _BodyState extends State<Body> {
             text: "Activities",
             icon: "",
             alt: Icon(FeatherIcons.activity,color: AppTheme.aylfMain,size: getProportionateScreenWidth(20),),
-            press: () => {},
+            press: () => {
+              Navigator.pushNamed(context, ActivityScreen.routeName,
+                  arguments: {"userActivities": true})
+            },
           ),
           ProfileMenu(
             text: "My group",

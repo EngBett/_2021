@@ -11,7 +11,7 @@ class ActivityViewScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(""),
         ),
-        body: Body(activity: activity,)
+        body: Body(activity: activity["activity"],volunteered: activity["volunteered"],)
     );
   }
 }

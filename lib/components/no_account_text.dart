@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/screens/choose_country/choose_country_screen.dart';
+import 'package:aylf/screens/choose_country/choose_country_screen.dart';
 
 import '../constants.dart';
 import '../size_config.dart';

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/custom_drawer/drawer_user_controller.dart';
-import 'package:new_aylf_mobile/components/custom_drawer/home_drawer.dart';
-import 'package:new_aylf_mobile/screens/about_aylf/about_aylf_screen.dart';
-import 'package:new_aylf_mobile/screens/about_dev/about_dev_screen.dart';
-import 'package:new_aylf_mobile/screens/feedback/feedback_screen.dart';
-import 'package:new_aylf_mobile/screens/help/help_screen.dart';
-import 'package:new_aylf_mobile/screens/home/home_screen.dart';
-import 'package:new_aylf_mobile/screens/invite_friend/invite_friend_screen.dart';
+import 'package:aylf/components/custom_drawer/drawer_user_controller.dart';
+import 'package:aylf/components/custom_drawer/home_drawer.dart';
+import 'package:aylf/screens/about_aylf/about_aylf_screen.dart';
+import 'package:aylf/screens/about_dev/about_dev_screen.dart';
+import 'package:aylf/screens/feedback/feedback_screen.dart';
+import 'package:aylf/screens/help/help_screen.dart';
+import 'package:aylf/screens/home/home_screen.dart';
+import 'package:aylf/screens/invite_friend/invite_friend_screen.dart';
 
 import '../../app_theme.dart';
 
@@ -16,7 +16,6 @@ class NavigationScreen extends StatefulWidget {
   }) : super(key:key);
 
   static String routeName = "/navigation";
-
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
 }

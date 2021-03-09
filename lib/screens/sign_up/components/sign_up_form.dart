@@ -1,15 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:new_aylf_mobile/components/custom_surfix_icon.dart';
-import 'package:new_aylf_mobile/components/default_button.dart';
-import 'package:new_aylf_mobile/components/form_error.dart';
-import 'package:new_aylf_mobile/helpers/general_controller.dart';
-import 'package:new_aylf_mobile/screens/complete_profile/complete_profile_screen.dart';
+import 'package:aylf/components/custom_surfix_icon.dart';
+import 'package:aylf/components/default_button.dart';
+import 'package:aylf/components/form_error.dart';
+import 'package:aylf/helpers/args.dart';
+import 'package:aylf/screens/splash/splash_screen.dart';
+import 'package:aylf/services/controllers/auth.dart';
+import 'package:aylf/screens/verify_email/verify_email_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
-
 class SignUpForm extends StatefulWidget {
+  final SignUpArgs signUpArgs;
+
+  const SignUpForm({Key key, this.signUpArgs}) : super(key: key);
+
   @override
   _SignUpFormState createState() => _SignUpFormState();
 }
@@ -21,6 +29,8 @@ class _SignUpFormState extends State<SignUpForm> {
   String conform_password;
   bool remember = false;
   final List<String> errors = [];
+
+  var _loading = false;
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -36,7 +46,6 @@ class _SignUpFormState extends State<SignUpForm> {
       });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -51,12 +60,39 @@ class _SignUpFormState extends State<SignUpForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
-            text: "Register",
-            press: () {
+            text: _loading ? "Registering ..." : "Register",
+            press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+
+                if (!await getConnection()) {
+                  _showNoInternetModal();
+                  return;
+                }
+
+                if(_loading){
+                  return;
+                }
+
+                setState(() {
+                  _loading = !_loading;
+                });
+
+                var data = {
+                  "firstname": widget.signUpArgs.firstName,
+                  "middlename": "",
+                  "lastname": widget.signUpArgs.lastName,
+                  "email": email,
+                  "phone": widget.signUpArgs.phoneNumber,
+                  "group_id": widget.signUpArgs.detailArgs.groupId,
+                  "dob": widget.signUpArgs.dob,
+                  "gender": widget.signUpArgs.detailArgs.gender,
+                  "password": password,
+                  "password_confirmation": conform_password
+                };
+
+                //Sign up
+                _signUp(data);
               }
             },
           ),
@@ -156,7 +192,7 @@ class _SignUpFormState extends State<SignUpForm> {
       decoration: InputDecoration(
         labelText: "Email",
         hintText: "Enter your email",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
+        // If  you are using latest version of flutter then label text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
@@ -164,4 +200,60 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
+  Future<bool> getConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
+  _showNoInternetModal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: getProportionateScreenHeight(50),
+              color: Colors.white,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('Check your internet connection...'),
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  _signUp(Map data) async {
+    var response = await Auth.register(data);
+
+    var token = response["access_token"];
+
+    if (token != null) {
+      //redirect to verify email screen
+      Navigator.popUntil(context, ModalRoute.withName(SplashScreen.routeName));
+      Navigator.pushNamed(context, VerifyEmailScreen.routeName);
+    } else {
+      if (response["errors"] != null) {
+        for (var error in response["errors"]) {
+          addError(error: error);
+        }
+        setState(() {
+          _loading = !_loading;
+        });
+      } else {
+        setState(() {
+          _loading = !_loading;
+        });
+      }
+    }
+
+    print(response);
+  }
 }
